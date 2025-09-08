@@ -67,3 +67,33 @@ export const deleteProduct = async (req: Request, res: Response) => {
     });
   }
 };
+
+export const updateProduct = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const { name, description, price } = req.body;
+
+  // Validación
+  if (!name || !description || !price) {
+    return res.status(400).json({ error: 'Todos los campos son obligatorios' });
+  }
+
+  if (isNaN(parseFloat(price)) || parseFloat(price) <= 0) {
+    return res.status(400).json({ error: 'El precio debe ser un número válido mayor que 0' });
+  }
+
+  try {
+    const product = await Product.findByPk(id);
+    if (!product) {
+      return res.status(404).json({ error: 'Producto no encontrado' });
+    }
+
+    await product.update({ name, description, price: parseFloat(price) });
+    res.json(product);
+  } catch (error) {
+    console.error('Error al actualizar el producto:', error);
+    res.status(500).json({ 
+      error: 'Error al actualizar el producto',
+      details: error instanceof Error ? error.message : 'Unknown error'
+    });
+  }
+};
