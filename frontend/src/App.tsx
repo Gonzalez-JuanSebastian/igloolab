@@ -12,7 +12,7 @@ function App() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [activeSection, setActiveSection] = useState('dashboard'); 
+  const [activeSection, setActiveSection] = useState('products'); 
   useEffect(() => {
     fetchProducts();
   }, []);
